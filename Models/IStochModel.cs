@@ -9,6 +9,6 @@ namespace CalculationEngine
     {
         int NbTimes { get; }
         int NbSimus { get; }
-        double[][][] Simulate();
+        (double[][][], double[]) Simulate();
     }
 }

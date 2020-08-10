@@ -6,17 +6,14 @@ namespace Models
 {
     public static class MathHelper
     {
-        public static double Pow(this double x, int n)
+        public static double D1(double S, double K, double r, double sigma, double s)
         {
-            var _x = x;
+            return (Math.Log(S / K) + (r + .5 * sigma * sigma) * s) / (sigma *Math.Sqrt(s));
+        }
 
-            if (n == 0)
-                return 1.0;
-
-            for (int i = 0; i < n - 1; i++)
-                _x *= x;
-
-            return _x;
+        public static double D2(double S, double K, double r, double sigma, double s)
+        {
+            return D1(S, K, r, sigma, s) - sigma * Math.Sqrt(s);
         }
     }
 }

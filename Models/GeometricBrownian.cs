@@ -1,9 +1,12 @@
-﻿using MathNet.Numerics.Differentiation;
+﻿using Accord;
+using MathNet.Numerics.Differentiation;
 using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Factorization;
 using Models;
 using System;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 
@@ -11,6 +14,8 @@ namespace CalculationEngine
 {
     public class GeometricBrownian : BaseModel, IStochModel
     {
+        private double m_r;
+        
         private double[] m_drift;
         private double[][] m_volStructure;
         private int m_nbUnderlyings;
@@ -19,15 +24,20 @@ namespace CalculationEngine
 
         public int NbSimus => m_nbSimus;
 
-        public GeometricBrownian(double[] S0, double T, int nbTimes, int nbSimus, double[] drift, double[][] vola) 
+        public double R => m_r;
+
+        public double Dt => m_dt;
+
+        public GeometricBrownian(double r, double[] S0, double T, int nbTimes, int nbSimus, double[] drift, double[][] vola) 
             : base(S0, T, nbTimes, nbSimus)
         {
+            m_r = r;
             m_drift = drift;
             m_volStructure = vola;
             m_nbUnderlyings = S0.Length;
         }        
 
-        public double[][][] Simulate()
+        public (double[][][], double[]) Simulate()
         {
             var paths = new double[NbSimus][][];
             var dWt = new double[NbSimus][][];
@@ -66,7 +76,7 @@ namespace CalculationEngine
                 }
             }            
 
-            return paths;
+            return (paths, Enumerable.Range(0, m_nbTimes).Select(iTime => Math.Exp(m_r * iTime * m_dt)).ToArray());
         }
     }
 }
