@@ -14,8 +14,8 @@ namespace HedgeExchangeOption
         private double[][] m_weightsCall4;
 
         public DeltaGammaHedge(double notionalExchange, double sigma1, double sigma2, double _K1, double _K2,
-            double rho, int nbSimus, double[] t, double T, double[][][] underlyings, double dt,
-            double r) : base(notionalExchange, sigma1, sigma2, _K1, _K2, rho, nbSimus, t, T, underlyings, dt, r)
+            double rho, int nbSimus, double[] t, int[] subIndices, double T, double[][][] underlyings, double dt,
+            double r) : base(notionalExchange, sigma1, sigma2, _K1, _K2, rho, nbSimus, t, subIndices, T, underlyings, dt, r)
         {
             m_call3 = null;
             m_call4 = null;

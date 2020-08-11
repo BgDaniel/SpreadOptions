@@ -36,12 +36,14 @@ namespace HedgeExchangeOption
         protected double[][] m_valuesAnalytical;
 
         protected int m_nbSimus;
-        protected int m_nbTimes;      
+        protected int m_nbTimes;
+
+        protected int[] m_subIndices;
 
         protected double[][][] m_underlyings;
 
         public DeltaHedge(double notionalExchange, double sigma1, double sigma2, double _K1, double _K2, 
-            double rho, int nbSimus, double[] t, double T, double[][][] underlyings, double dt, 
+            double rho, int nbSimus, double[] t, int[] subIndices, double T, double[][][] underlyings, double dt, 
             double r)
         {
             m_notionalExchange = notionalExchange;
@@ -53,7 +55,7 @@ namespace HedgeExchangeOption
             m_rho = rho;
             m_sigma = Math.Sqrt(m_sigma1 * m_sigma1 + m_sigma2 * m_sigma2 - 2.0 * m_rho * m_sigma1 * m_sigma2);
 
-            m_exchangeOption = new ExchangeOption(m_notionalExchange, m_sigma, m_r);
+            m_exchangeOption = new ExchangeOption(m_notionalExchange, m_sigma);
 
             m_K1 = _K1;
             m_k2 = _K2;
@@ -66,6 +68,8 @@ namespace HedgeExchangeOption
 
             m_t = t;
             m_nbTimes = m_t.Length;
+
+            m_subIndices = subIndices;
 
             m_weights1 = new double[nbSimus][];
             m_weights2 = new double[nbSimus][];
@@ -110,8 +114,8 @@ namespace HedgeExchangeOption
 
                 for (int jTime = 0; jTime < m_nbTimes; jTime++)
                 {
-                    m_S1[iSimu][jTime] = paths[iSimu][jTime][0];
-                    m_S2[iSimu][jTime] = paths[iSimu][jTime][1];
+                    m_S1[iSimu][jTime] = paths[iSimu][m_subIndices[jTime]][0];
+                    m_S2[iSimu][jTime] = paths[iSimu][m_subIndices[jTime]][1];
                     valuePairs[iSimu][jTime] = new ValuePair(value0, value0);
                 }
 

@@ -25,12 +25,22 @@ namespace Instruments
 
         public double Delta(double S, double s)
         {
-            return m_N * Normal.CDF(.0, 1.0, MathHelper.D1(S, m_K, m_r, m_sigma, s));
+            return m_N * Normal.CDF(.0, 1.0, D1(S, m_K, m_r, m_sigma, s));
         }
 
         public double Gamma(double S, double s)
         {
-            return m_N * Normal.PDF(.0, 1.0, MathHelper.D1(S, m_K, m_r, m_sigma, s)) / (S * m_sigma * Math.Sqrt(s));
+            return m_N * Normal.PDF(.0, 1.0, D1(S, m_K, m_r, m_sigma, s)) / (S * m_sigma * Math.Sqrt(s));
+        }
+
+        private static double D1(double S, double K, double r, double sigma, double s)
+        {
+            return (Math.Log(S / K) + (r + .5 * sigma * sigma) * s) / (sigma * Math.Sqrt(s));
+        }
+
+        private static double D2(double S, double K, double r, double sigma, double s)
+        {
+            return D1(S, K, r, sigma, s) - sigma * Math.Sqrt(s);
         }
 
         public double Value(double S)

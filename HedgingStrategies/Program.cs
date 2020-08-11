@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -20,21 +21,24 @@ namespace HedgingStrategies
         static void Main(string[] args)
         {
             var S0 = new double[] { 1.0, 1.0 };
-            var T = 2.0;
-            var nbTimes = 200;
-            var nbSimus = 1000;
+            var T = 1.0;
+            var nbTimes = 1000;
+            var nbSimus = 1;
 
-            var nbSubGrid = 50;
+            var nbSubGrid = 100;
             var subGrid = Enumerable.Range(0, nbSubGrid).Select(iSubTime => iSubTime * T / nbSubGrid).ToArray();
+            var subIndices = Enumerable.Range(0, nbSubGrid).Select(iSubTime => (int)(iSubTime * nbTimes / nbSubGrid)).ToArray();
 
-            var r = .02;
+            var r = .04;
             var drift = new double[] { r, r };
 
             var sigma1 = .35;
-            var sigma2 = .4;
-            var rho = -.1;
+            var sigma2 = .25;
+            var rho = -.65;
 
-            var vola = new double[][] { new double[] { sigma1, rho }, new double[] { rho, sigma2 } };
+            var vola = new double[][] { 
+                new double[] { sigma1 * sigma1, rho * sigma1 * sigma2}, 
+                new double[] { rho * sigma1 * sigma2, sigma2 * sigma2 } };
 
             var gbm = new GeometricBrownian(r, S0, T, nbTimes, nbSimus, drift, vola);
             (var paths, var B) = gbm.Simulate();
@@ -44,7 +48,7 @@ namespace HedgingStrategies
             var K2 = 1.0;
 
             var deltaHedgeSpreadOption = new DeltaHedge(notionalExchange, sigma1, sigma2, K1, K2, rho,
-                nbSimus, subGrid, T, paths, gbm.Dt, r);
+                nbSimus, subGrid, subIndices, T, paths, gbm.Dt, r);
 
             var valuePairs = deltaHedgeSpreadOption.Hedge(paths, B);
 

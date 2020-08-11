@@ -9,13 +9,11 @@ namespace Instruments
     {
         private double m_N;
         private double m_sigma;
-        private double m_r;
 
-        public ExchangeOption(double _N, double sigma, double r)
+        public ExchangeOption(double _N, double sigma)
         {
             m_N = _N;
             m_sigma = sigma;
-            m_r = r;
         }
 
         //Margrabe's formula
@@ -27,22 +25,22 @@ namespace Instruments
 
         private double D1(double S1, double S2, double s)
         {
-            return m_N * (Math.Log(S2 / S1) / (m_sigma * Math.Sqrt(s)) - .5 * m_sigma * Math.Sqrt(s));
+            return (Math.Log(S2 / S1) / (m_sigma * Math.Sqrt(s)) - .5 * m_sigma * Math.Sqrt(s));
         }
 
         private double D2(double S1, double S2, double s)
         {
-            return m_N * (Math.Log(S2 / S1) / (m_sigma * Math.Sqrt(s)) + .5 * m_sigma * Math.Sqrt(s));
+            return (Math.Log(S2 / S1) / (m_sigma * Math.Sqrt(s)) + .5 * m_sigma * Math.Sqrt(s));
         }
 
         public double Delta1(double S1, double S2, double s)
         {
-            return - Normal.PDF(.0, 1.0, D1(S1, S2, s));
+            return - m_N * Normal.CDF(.0, 1.0, D1(S1, S2, s));
         }
 
         public double Delta2(double S1, double S2, double s)
         {
-            return + Normal.PDF(.0, 1.0, D2(S1, S2, s));
+            return + m_N * Normal.CDF(.0, 1.0, D2(S1, S2, s));
         }
 
         public double Gamma11(double S1, double S2, double s)
