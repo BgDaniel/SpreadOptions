@@ -10,9 +10,9 @@ namespace Helpers
 {
     public static class FileWriter
     {
-        public static void WriteToFile(ValuePair[] valuePairs, string fileName)
+        public static void WriteToFile<T>(T[] valuePairs, string fileName) where T : class
         {
-            var engine = new FileHelperEngine<ValuePair>();
+            var engine = new FileHelperEngine<T>();
 
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;

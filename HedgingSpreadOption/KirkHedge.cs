@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Hedging
+namespace HedgingSpreadOption
 {
     public class KirkHedge
     {

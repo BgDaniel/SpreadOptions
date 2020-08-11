@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Instruments
+namespace HedgingSpreadOption
 {
     public class SpreadOption
     {

@@ -44,30 +44,5 @@ namespace Hedging
 
             return valuePairsMean;
         }
-
-        public static ValuePair[] MSE(ValuePair[][] valuePairs)
-        {
-            var meanValuePairs = Mean(valuePairs);
-            
-            int nbSimus = valuePairs.Length;
-            int nbTimes = valuePairs[0].Length;
-            var valuePairsMean = new ValuePair[nbTimes];
-
-            for (int iTime = 0; iTime < nbTimes; iTime++)
-            {
-                var meanValueHedge = .0;
-                var meanValueAnalytical = .0;
-
-                for (int jSimu = 0; jSimu < nbSimus; jSimu++)
-                {
-                    meanValueHedge += valuePairs[jSimu][iTime].ValueHedge / nbSimus;
-                    meanValueAnalytical += valuePairs[jSimu][iTime].ValueAnalytical / nbSimus;
-                }
-
-                valuePairsMean[iTime] = new ValuePair(meanValueHedge, meanValueAnalytical);
-            }
-
-            return valuePairsMean;
-        }
     }
 }

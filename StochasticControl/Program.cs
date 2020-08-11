@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace StochasticControl
+namespace Hedging
 {
     class Program
     {
@@ -49,13 +49,10 @@ namespace StochasticControl
             var valuePairs = deltaHedgeSpreadOption.Hedge(paths, B);
 
             // write values for first path to csv file
-            FileWriter.WriteToFile(valuePairs[0], "value_hedge_analytical.csv");
+            FileWriter.WriteToFile(valuePairs[0], "hedge_along_path.csv");
 
             // write mean values to csv file
-            FileWriter.WriteToFile(ValuePair.Mean(valuePairs), "value_hedge_analytical_mean.csv");
-
-            // write tracking error to csv file
-            FileWriter.WriteToFile(ValuePair.Mean(valuePairs), "value_hedge_analytical_mean.csv");
+            FileWriter.WriteToFile(TrackingError.Calculate(valuePairs), "tracking_errors.csv");
         }
     }
 }
