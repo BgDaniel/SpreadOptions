@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace Hedging
+namespace HedgingStrategies
 {
     class Program
     {
@@ -34,7 +34,7 @@ namespace Hedging
             var sigma2 = .4;
             var rho = -.1;
 
-            var vola = new double[][] { new double[] { sigma1, rho }, new double[] { rho, sigma2 } };            
+            var vola = new double[][] { new double[] { sigma1, rho }, new double[] { rho, sigma2 } };
 
             var gbm = new GeometricBrownian(r, S0, T, nbTimes, nbSimus, drift, vola);
             (var paths, var B) = gbm.Simulate();
