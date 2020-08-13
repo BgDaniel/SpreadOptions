@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Hedging;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Hedging
+namespace Helpers
 {
     public interface IHedge
     {

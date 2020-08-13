@@ -45,17 +45,22 @@ namespace Instruments
 
         public double Gamma11(double S1, double S2, double s)
         {
-            throw new NotImplementedException();
-        }
-
-        public double Gamma22(double S1, double S2, double s)
-        {
-            throw new NotImplementedException();
+            return + m_N / (m_sigma * Math.Sqrt(s) * S1) * Normal.PDF(.0, 1.0, D1(S1, S2, s)); 
         }
 
         public double Gamma12(double S1, double S2, double s)
         {
-            throw new NotImplementedException();
+            return - m_N / (m_sigma * Math.Sqrt(s) * S2) * Normal.PDF(.0, 1.0, D1(S1, S2, s));
+        }
+
+        public double Gamma21(double S1, double S2, double s)
+        {
+            return - m_N / (m_sigma * Math.Sqrt(s) * S1) * Normal.PDF(.0, 1.0, D2(S1, S2, s));
+        }
+
+        public double Gamma22(double S1, double S2, double s)
+        {
+            return m_N / (m_sigma * Math.Sqrt(s) * S2) * Normal.PDF(.0, 1.0, D2(S1, S2, s));
         }
     }
 }

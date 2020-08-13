@@ -1,78 +1,45 @@
 ﻿using Hedging;
-using Helpers;
 using Instruments;
 using System;
 using System.Linq;
 
 namespace HedgeExchangeOption
 {
-    public class DeltaHedge : IHedge
+    public class GammaHedge : DeltaHedge
     {
-        protected ExchangeOption m_exchangeOption;
+        private EuropeanCall m_call1;
+        private EuropeanCall m_call2;
+        private ExchangeOption m_exchange1;
+        private ExchangeOption m_exchange2;
 
-        protected double[] m_B;
-        protected double[] m_t;
+        private double[][] m_weightsCall1;
+        private double[][] m_weightsCall2;
+        private double[][] m_weightsSpread1;
+        private double[][] m_weightsSpread2;
 
-        protected double m_notionalExchange;
-        protected double m_T;
-        protected double m_r;
-
-        protected double m_rho;
-        protected double m_sigma;
-
-        protected double[][] m_weightsS1;
-        protected double[][] m_weightsS2;
-
-        protected double[][] m_S1;
-        protected double[][] m_S2;
-
-        protected double[][] m_weightsB;
-        protected double[][] m_valuesHedge;
-        protected double[][] m_valuesAnalytical;
-
-        protected int m_nbSimus;
-        protected int m_nbTimes;
-
-        protected int[] m_subIndices;
-
-        protected double[][][] m_underlyings;
-
-        public DeltaHedge(double notionalExchange, double sigma1, double sigma2 ,
-            double rho, int nbSimus, double[] t, int[] subIndices, double T, double[][][] underlyings, 
-            double r)
+        public GammaHedge(EuropeanCall call1, EuropeanCall call2, ExchangeOption exchange1, ExchangeOption exchange2, 
+            double notionalExchange, double sigma1, double sigma2,
+            double rho, int nbSimus, double[] t, int[] subIndices, double T, double[][][] underlyings, double dt,
+            double r) : base(notionalExchange, sigma1, sigma2, rho, nbSimus, t, subIndices, T, underlyings, r)
         {
-            m_notionalExchange = notionalExchange;
+            m_call1 = call1;
+            m_call2 = call2;
 
-            m_r = r;
+            m_exchange1 = exchange1;
+            m_exchange1 = exchange2;
+            
+            m_weightsCall1 = new double[nbSimus][];
+            m_weightsCall2 = new double[nbSimus][];
+            m_weightsSpread1 = new double[nbSimus][];
+            m_weightsSpread2 = new double[nbSimus][];
 
-            m_rho = rho;
-            m_sigma = Math.Sqrt(sigma1 * sigma1 + sigma2 * sigma2 - 2.0 * m_rho * sigma1 * sigma2);
-            m_exchangeOption = new ExchangeOption(m_notionalExchange, m_sigma);
-
-            m_nbSimus = nbSimus;
-
-            m_T = T;
-
-            m_t = t;
-            m_nbTimes = m_t.Length;
-
-            m_subIndices = subIndices;
-
-            m_weightsS1 = new double[nbSimus][];
-            m_weightsS2 = new double[nbSimus][];
-            m_weightsB = new double[nbSimus][];
-
-            m_valuesHedge = new double[nbSimus][];
-
-            for(int iSimu = 0; iSimu < m_nbSimus; iSimu++)
+            for (int iSimu = 0; iSimu < m_nbSimus; iSimu++)
             {
-                m_weightsS1[iSimu] = new double[m_nbTimes];
-                m_weightsS2[iSimu] = new double[m_nbTimes];
-                m_weightsB[iSimu] = new double[m_nbTimes];
-                m_valuesHedge[iSimu] = new double[m_nbTimes];
+                m_weightsCall1[iSimu] = new double[m_nbTimes];
+                m_weightsCall2[iSimu] = new double[m_nbTimes];
+                m_weightsSpread1[iSimu] = new double[m_nbTimes];
+                m_weightsSpread2[iSimu] = new double[m_nbTimes];
             }
-        
-            m_underlyings = underlyings;
         }
 
         public ValuePair[][] Hedge(double[][][] paths, double[] B)
@@ -124,7 +91,7 @@ namespace HedgeExchangeOption
                     // new value
                     m_valuesHedge[iSimu][jTime] = m_weightsS1[iSimu][jTime - 1] * m_S1[iSimu][jTime]
                         + m_weightsS2[iSimu][jTime - 1] * m_S2[iSimu][jTime]
-                        + m_weightsB[iSimu][jTime - 1] * m_B[jTime];                    
+                        + m_weightsB[iSimu][jTime - 1] * m_B[jTime];
 
                     // rebalance
                     m_weightsS1[iSimu][jTime] = m_exchangeOption.Delta1(m_S1[iSimu][jTime], m_S2[iSimu][jTime], s);

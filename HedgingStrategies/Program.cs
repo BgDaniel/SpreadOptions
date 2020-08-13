@@ -25,7 +25,7 @@ namespace HedgingStrategies
             var nbTimes = 1000;
             var nbSimus = 1;
 
-            var nbSubGrid = 100;
+            var nbSubGrid = 1000;
             var subGrid = Enumerable.Range(0, nbSubGrid).Select(iSubTime => iSubTime * T / nbSubGrid).ToArray();
             var subIndices = Enumerable.Range(0, nbSubGrid).Select(iSubTime => (int)(iSubTime * nbTimes / nbSubGrid)).ToArray();
 
@@ -47,8 +47,8 @@ namespace HedgingStrategies
             var K1 = 1.0;
             var K2 = 1.0;
 
-            var deltaHedgeSpreadOption = new DeltaHedge(notionalExchange, sigma1, sigma2, K1, K2, rho,
-                nbSimus, subGrid, subIndices, T, paths, gbm.Dt, r);
+            var deltaHedgeSpreadOption = new DeltaHedge(notionalExchange, sigma1, sigma2, rho,
+                nbSimus, subGrid, subIndices, T, paths, r);
 
             var valuePairs = deltaHedgeSpreadOption.Hedge(paths, B);
 
