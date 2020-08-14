@@ -43,9 +43,10 @@ namespace Instruments
             return D1(S, K, r, sigma, s) - sigma * Math.Sqrt(s);
         }
 
-        public double Value(double S)
+        public double Value(double S, double s)
         {
-            return m_N * Math.Max(S - m_K, .0);
+            return m_N * (S * Normal.CDF(.0, 1.0, D1(S, m_K, m_r, m_sigma, s)) 
+                - m_K * Math.Exp(- m_r * s) * Normal.CDF(.0, 1.0, D2(S, m_K, m_r, m_sigma, s)));
         }
     }
 }

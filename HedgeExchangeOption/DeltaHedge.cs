@@ -75,7 +75,7 @@ namespace HedgeExchangeOption
             m_underlyings = underlyings;
         }
 
-        public ValuePair[][] Hedge(double[][][] paths, double[] B)
+        public virtual ValuePair[][] Hedge(double[][][] paths, double[] B)
         {
             m_S1 = new double[m_nbSimus][];
             m_S2 = new double[m_nbSimus][];

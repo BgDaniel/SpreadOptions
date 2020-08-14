@@ -9,7 +9,7 @@ namespace Helpers
     [DelimitedRecord(";")]
     public class TrackingError
     {
-        public double TackingError;
+        public double TrackingErr;
 
         public TrackingError()
         {
@@ -18,7 +18,7 @@ namespace Helpers
 
         public TrackingError(double tackingError)
         {
-            TackingError = tackingError;
+            TrackingErr = tackingError;
         }
 
         public static TrackingError[] Calculate(ValuePair[][] valuePairs)
@@ -32,8 +32,13 @@ namespace Helpers
                 var trackingError = .0;
 
                 for (int jSimu = 0; jSimu < nbSimus; jSimu++)
+                {
                     trackingError += (valuePairs[jSimu][iTime].ValueHedge - valuePairs[jSimu][iTime].ValueAnalytical)
                         * (valuePairs[jSimu][iTime].ValueHedge - valuePairs[jSimu][iTime].ValueAnalytical) / (nbSimus - 1);
+
+                    if (trackingError > .0)
+                       break;
+                }                    
 
                 trackingErrors[iTime] = new TrackingError(Math.Sqrt(trackingError));
             }

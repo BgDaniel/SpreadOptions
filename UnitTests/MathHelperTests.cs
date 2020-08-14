@@ -42,7 +42,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void TestSolveHedge()
+        public void TestSolveGammaHedge()
         {
             for (int i = 0; i < NUMBER_SAMPLES; i++)
             {
@@ -50,28 +50,28 @@ namespace UnitTests
 
                 var delta1Call1 = normal.Sample();
                 var delta2Call2 = normal.Sample();
-                var delta1Spread = normal.Sample();
-                var delta2Spread = normal.Sample();
+                var delta1Exchange = normal.Sample();
+                var delta2Exchange = normal.Sample();
                 var gamma11Call1 = normal.Sample();
                 var gamma22Call2 = normal.Sample();
-                var gamma11Spread = normal.Sample();
-                var gamma22Spread = normal.Sample();
-                var gamma12Spread = normal.Sample();
+                var gamma11Exchange = normal.Sample();
+                var gamma22Exchange = normal.Sample();
+                var gamma12Exchange = normal.Sample();
                 var delta1V = normal.Sample();
                 var delta2V = normal.Sample();
                 var gamma11V = normal.Sample();
                 var gamma22V = normal.Sample();
                 var gamma12V = normal.Sample();
 
-                (var weightS1, var weightS2, var weightCall1, var weightCall2, var weightSpread) =
-                    SolveHedge.Solve(delta1Call1, delta2Call2, delta1Spread, delta2Spread, gamma11Call1,
-                    gamma22Call2, gamma11Spread, gamma22Spread, gamma12Spread,
+                (var weightS1, var weightS2, var weightCall1, var weightCall2, var weightExchange) =
+                    SolveGammaHedge.Solve(delta1Call1, delta2Call2, delta1Exchange, delta2Exchange, gamma11Call1,
+                    gamma22Call2, gamma11Exchange, gamma22Exchange, gamma12Exchange,
                     delta1V, delta2V, gamma11V, gamma22V, gamma12V);
 
                 (var _delta1V, var _delta2V, var _gamma11V, var _gamma22V, var _gamma12V) =
-                    SolveHedge.Delta(delta1Call1, delta2Call2, delta1Spread, delta2Spread, 
-                    gamma11Call1, gamma22Call2, gamma11Spread, gamma22Spread, gamma12Spread,
-                    weightS1, weightS2, weightCall1, weightCall2, weightSpread);
+                    SolveGammaHedge.Delta(delta1Call1, delta2Call2, delta1Exchange, delta2Exchange, 
+                    gamma11Call1, gamma22Call2, gamma11Exchange, gamma22Exchange, gamma12Exchange,
+                    weightS1, weightS2, weightCall1, weightCall2, weightExchange);
 
                 if (Math.Abs(delta1V - _delta1V) >= THRESHOLD)
                     throw new Exception("Deviation too high!");
@@ -86,6 +86,46 @@ namespace UnitTests
                     throw new Exception("Deviation too high!");
 
                 if (Math.Abs(gamma12V - _gamma12V) >= THRESHOLD)
+                    throw new Exception("Deviation too high!");
+            }
+        }
+
+        [TestMethod]
+        public void TestSolveSimpleGammaHedge()
+        {
+            for (int i = 0; i < NUMBER_SAMPLES; i++)
+            {
+                var normal = new Normal();
+
+                var delta1Call1 = normal.Sample();
+                var delta2Call2 = normal.Sample();
+                var gamma11Call1 = normal.Sample();
+                var gamma22Call2 = normal.Sample();
+                var delta1V = normal.Sample();
+                var delta2V = normal.Sample();
+                var gamma11V = normal.Sample();
+                var gamma22V = normal.Sample();
+                var gamma12V = normal.Sample();
+
+                (var weightS1, var weightS2, var weightCall1, var weightCall2) =
+                    SolveGammaHedge.Solve(delta1Call1, delta2Call2, gamma11Call1, gamma22Call2,
+                    delta1V, delta2V, gamma11V, gamma22V);
+
+                (var _delta1V, var _delta2V, var _gamma11V, var _gamma22V) =
+                    SolveGammaHedge.Delta(delta1Call1, delta2Call2,
+                    gamma11Call1, gamma22Call2,
+                    weightS1, weightS2, weightCall1, weightCall2);
+
+                if (Math.Abs(delta1V - _delta1V) >= THRESHOLD)
+                    throw new Exception("Deviation too high!");
+
+                if (Math.Abs(delta2V - _delta2V) >= THRESHOLD)
+                    throw new Exception("Deviation too high!");
+
+                if (Math.Abs(gamma11V - _gamma11V) >= THRESHOLD)
+                    throw new Exception("Deviation too high!");
+
+                if (Math.Abs(gamma22V - _gamma22V) >= THRESHOLD)
                     throw new Exception("Deviation too high!");
             }
         }

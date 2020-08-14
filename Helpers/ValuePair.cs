@@ -13,7 +13,8 @@ namespace Hedging
 
         public ValuePair()
         {
-
+            ValueHedge = .0;
+            ValueAnalytical = .0;
         }
 
         public ValuePair(double valueHedge, double valueAnalytical)
