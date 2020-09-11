@@ -13,7 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helpers", "Helpers\Helpers.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HedgingStrategies", "HedgingStrategies\HedgingStrategies.csproj", "{10ABCB2B-7925-4031-97E2-4F9FF4A1BC97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{40920D0B-5157-4053-BCD3-7DE2B6BB1582}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{40920D0B-5157-4053-BCD3-7DE2B6BB1582}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicStaticHedging", "SparkSpreadHedge\DynamicStaticHedging.csproj", "{0DA8B0C3-6546-4633-9F87-D75B8660AAF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatDynamicHedging", "StatDynHedging\StatDynamicHedging.csproj", "{172063D2-2D2F-4D1B-AA88-063351D7EAAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{40920D0B-5157-4053-BCD3-7DE2B6BB1582}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40920D0B-5157-4053-BCD3-7DE2B6BB1582}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40920D0B-5157-4053-BCD3-7DE2B6BB1582}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DA8B0C3-6546-4633-9F87-D75B8660AAF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DA8B0C3-6546-4633-9F87-D75B8660AAF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DA8B0C3-6546-4633-9F87-D75B8660AAF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DA8B0C3-6546-4633-9F87-D75B8660AAF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{172063D2-2D2F-4D1B-AA88-063351D7EAAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{172063D2-2D2F-4D1B-AA88-063351D7EAAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{172063D2-2D2F-4D1B-AA88-063351D7EAAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{172063D2-2D2F-4D1B-AA88-063351D7EAAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

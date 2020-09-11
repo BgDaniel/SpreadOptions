@@ -4,6 +4,20 @@ import os
 from pathlib import Path
 import matplotlib.pyplot as plt
 
+
+# get data as pandas dataframe
+DIR_PATH = Path(__file__).parent.parent
+PATH_TO_DATA = os.path.join(DIR_PATH, "StatDynHedging\\Data\\delta_hedge_along_path.csv")
+samples = pd.read_csv(PATH_TO_DATA, sep=';')
+
+# plot data
+plt.plot(samples.ValueHedge, color='red', label='value hedge')
+plt.plot(samples.ValueAnalytical, color='blue', label='analytical value')
+plt.legend()
+plt.title = 'Delta Hedge Along Path'
+plt.show()
+
+'''
 # get data as pandas dataframe
 DIR_PATH = Path(__file__).parent.parent
 PATH_TO_DATA = os.path.join(DIR_PATH, "HedgingStrategies\\Data\\delta_hedge_along_path.csv")
@@ -42,3 +56,4 @@ plt.plot(tracking_error_gamma_hedge, color='blue', label='gamma hedge')
 plt.legend()
 plt.title = 'Tracking Error Delta vs Gamma Hedge'
 plt.show()
+'''
