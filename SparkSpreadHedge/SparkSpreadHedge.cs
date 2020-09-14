@@ -18,9 +18,6 @@ namespace DynamicStaticHedging
         protected double[][] m_weightsG;
         protected double[][] m_weightsB;
 
-        protected double[][] m_P;
-        protected double[][] m_G;
-
         protected double[][] m_valuesHedge;
         protected double[][] m_valuesAnalytical;
 
@@ -69,9 +66,6 @@ namespace DynamicStaticHedging
 
         public virtual ValuePair[][] Hedge(double[][][] paths, double[] B)
         {
-            m_P = new double[m_nbSimus][];
-            m_G = new double[m_nbSimus][];
-
             m_valuesAnalytical = new double[m_nbSimus][];
 
             var valuePairs = new ValuePair[m_nbSimus][];
@@ -86,19 +80,15 @@ namespace DynamicStaticHedging
                 m_valuesHedge[iSimu][0] = value0;
                 m_valuesAnalytical[iSimu][0] = value0;
 
-                m_P[iSimu] = new double[m_nbTimes];
-                m_G[iSimu] = new double[m_nbTimes];
-
                 for (int jTime = 0; jTime < m_nbTimes; jTime++)
-                {
-                    m_P[iSimu][jTime] = paths[iSimu][m_subIndicesP[jTime]][0];
-                    m_G[iSimu][jTime] = paths[iSimu][m_subIndicesG[jTime]][1];
                     valuePairs[iSimu][jTime] = new ValuePair(value0, value0);
-                }
 
-                m_weightsP[iSimu][0] = m_exchangeOption.Delta2(m_G[iSimu][0], m_P[iSimu][0], m_T);
-                m_weightsG[iSimu][0] = m_exchangeOption.Delta1(m_G[iSimu][0], m_P[iSimu][0], m_T);
-                m_weightsB[iSimu][0] = value0 - m_weightsP[iSimu][0] * m_P[iSimu][0] - m_weightsG[iSimu][0] * m_G[iSimu][0];
+                var P0 = paths[iSimu][0][0];
+                var G0 = paths[iSimu][0][1];
+
+                m_weightsP[iSimu][0] = m_exchangeOption.Delta2(G0, P0, m_T);
+                m_weightsG[iSimu][0] = m_exchangeOption.Delta1(G0, P0, m_T);
+                m_weightsB[iSimu][0] = value0 - m_weightsP[iSimu][0] * P0 - m_weightsG[iSimu][0] * G0;
             }
 
             for (int iSimu = 0; iSimu < m_nbSimus; iSimu++)
@@ -107,18 +97,18 @@ namespace DynamicStaticHedging
                 {
                     var s = m_T - m_t[m_subIndices[jTime]];
 
-                    m_valuesAnalytical[iSimu][jTime] = m_exchangeOption.Value(m_G[iSimu][jTime], m_P[iSimu][jTime], s);
+                    m_valuesAnalytical[iSimu][jTime] = m_exchangeOption.Value(paths[iSimu][jTime][1], paths[iSimu][jTime][0], s);
 
                     // new value
-                    m_valuesHedge[iSimu][jTime] = m_weightsP[iSimu][jTime - 1] * m_P[iSimu][jTime]
-                        + m_weightsG[iSimu][jTime - 1] * m_G[iSimu][jTime];
+                    m_valuesHedge[iSimu][jTime] = m_weightsP[iSimu][jTime - 1] * paths[iSimu][jTime][0]
+                        + m_weightsG[iSimu][jTime - 1] * paths[iSimu][jTime][1];
 
                     // rebalance
                     var sP = m_T - m_t[m_subIndicesP[jTime]];
                     var sG = m_T - m_t[m_subIndicesG[jTime]];
-                    m_weightsP[iSimu][jTime] = m_exchangeOption.Delta2(m_G[iSimu][jTime], m_P[iSimu][jTime], sP);
-                    m_weightsG[iSimu][jTime] = m_exchangeOption.Delta1(m_G[iSimu][jTime], m_P[iSimu][jTime], sG);
-                    m_weightsB[iSimu][0] = m_valuesHedge[iSimu][jTime] - m_weightsP[iSimu][jTime] * m_P[iSimu][jTime] - m_weightsG[iSimu][jTime] * m_G[iSimu][jTime];
+                    m_weightsP[iSimu][jTime] = m_exchangeOption.Delta2(paths[iSimu][m_subIndicesP[jTime]][1], paths[iSimu][m_subIndicesP[jTime]][0], sP);
+                    m_weightsG[iSimu][jTime] = m_exchangeOption.Delta1(paths[iSimu][m_subIndicesG[jTime]][1], paths[iSimu][m_subIndicesG[jTime]][0], sG);
+                    m_weightsB[iSimu][0] = m_valuesHedge[iSimu][jTime] - m_weightsP[iSimu][jTime] * paths[iSimu][jTime][0] - m_weightsG[iSimu][jTime] * paths[iSimu][jTime][1];
 
                     valuePairs[iSimu][jTime] = new ValuePair(m_valuesHedge[iSimu][jTime], m_valuesAnalytical[iSimu][jTime]);
                 }
